@@ -30,7 +30,7 @@ public class TransportController {
             } else if ("DELETE".equals(method)) {
                 handleDelete(exchange);
             } else {
-                exchange.sendResponseHeaders(405, -1); // Method Not Allowed
+                exchange.sendResponseHeaders(405, -1);
             }
         });
 
@@ -39,7 +39,7 @@ public class TransportController {
         System.out.println("REST API Server started on port 8080.");
     }
 
-    // Обработка GET (Получение всех)
+
     private void handleGet(HttpExchange exchange) throws IOException {
         List<Bus> buses = busRepository.getAll();
         String jsonResponse = "[" + buses.stream()
@@ -49,14 +49,12 @@ public class TransportController {
         sendResponse(exchange, jsonResponse, 200);
     }
 
-    // Обработка POST (Добавление нового через JSON)
+
     private void handlePost(HttpExchange exchange) throws IOException {
         InputStream is = exchange.getRequestBody();
         String body = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))
                 .lines().collect(Collectors.joining("\n"));
 
-        // Очень простой парсинг JSON (ищем значения между кавычками)
-        // Ожидаемый формат: {"number":"55X", "capacity":60}
         try {
             String number = body.split("\"number\":\"")[1].split("\"")[0];
             String capStr = body.split("\"capacity\":")[1].split("}")[0].trim();
@@ -69,7 +67,6 @@ public class TransportController {
         }
     }
 
-    // Обработка DELETE
     private void handleDelete(HttpExchange exchange) throws IOException {
         String query = exchange.getRequestURI().getQuery();
         if (query != null && query.contains("number=")) {

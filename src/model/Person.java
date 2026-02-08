@@ -1,4 +1,3 @@
-// Person
 package model;
 import java.util.Objects;
 

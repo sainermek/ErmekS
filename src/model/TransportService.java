@@ -1,4 +1,3 @@
-// TransportService
 package model;
 
 import java.util.ArrayList;

@@ -44,7 +44,7 @@ public final class PostgresBusRepository implements BusRepository {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    // Обновленный метод с обработкой исключений (Требование по Exception Handling)
+
     public void updateCapacity(String number, int newCapacity) throws EntityNotFoundException, ValidationException {
         // Проверка валидности данных (ValidationException)
         if (newCapacity < 0) {
@@ -57,7 +57,7 @@ public final class PostgresBusRepository implements BusRepository {
             ps.setString(2, number);
             int rowsAffected = ps.executeUpdate();
 
-            // Если ни одна строка не изменилась, значит автобус не найден (EntityNotFoundException)
+
             if (rowsAffected == 0) {
                 throw new EntityNotFoundException("Автобус с номером " + number + " не найден в базе данных.");
             }
