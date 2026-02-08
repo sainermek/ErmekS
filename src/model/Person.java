@@ -17,16 +17,11 @@ public abstract class Person {
     public abstract void displayInfo();
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Person)) return false;
-        Person person = (Person) o;
-        return age == person.age &&
-                Objects.equals(name, person.name);
-    }
-
+    public boolean equals(Object o){
+        return o instanceof Person p &&
+                age == p.age &&
+                Objects.equals(name,p.name);}
     @Override
-    public int hashCode() {
-        return Objects.hash(name, age);
-    }
+    public int hashCode(){
+        return Objects.hash(name,age);}
 }

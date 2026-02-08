@@ -1,8 +1,9 @@
-//PostgresBusRepository
 package Repository;
 
 import model.Bus;
 import model.DBConnection;
+import model.EntityNotFoundException;
+import model.ValidationException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,10 +13,7 @@ public final class PostgresBusRepository implements BusRepository {
 
     @Override
     public void add(Bus bus) {
-        String sql = """
-                     INSERT INTO bus (number, capacity) 
-                     VALUES (?, ?);
-                     """;
+        String sql = "INSERT INTO bus (number, capacity) VALUES (?, ?);";
         try (Connection c = DBConnection.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, bus.number());
@@ -46,13 +44,27 @@ public final class PostgresBusRepository implements BusRepository {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    public void updateCapacity(String number, int newCapacity) {
+    // Обновленный метод с обработкой исключений (Требование по Exception Handling)
+    public void updateCapacity(String number, int newCapacity) throws EntityNotFoundException, ValidationException {
+        // Проверка валидности данных (ValidationException)
+        if (newCapacity < 0) {
+            throw new ValidationException("Вместимость не может быть отрицательной: " + newCapacity);
+        }
+
         try (Connection c = DBConnection.getConnection();
-             PreparedStatement ps = c.prepareStatement(
-                     "UPDATE bus SET capacity = ? WHERE number = ?")) {
+             PreparedStatement ps = c.prepareStatement("UPDATE bus SET capacity = ? WHERE number = ?")) {
             ps.setInt(1, newCapacity);
             ps.setString(2, number);
-            ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
+            int rowsAffected = ps.executeUpdate();
+
+            // Если ни одна строка не изменилась, значит автобус не найден (EntityNotFoundException)
+            if (rowsAffected == 0) {
+                throw new EntityNotFoundException("Автобус с номером " + number + " не найден в базе данных.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

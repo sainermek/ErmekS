@@ -1,5 +1,6 @@
-// CommuterRepository
-package model;
+package Repository;
+
+import model.Commuter; // Обязательно добавляем этот импорт
 import java.util.List;
 
 public interface CommuterRepository {

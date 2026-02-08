@@ -1,6 +1,7 @@
-// PostgresCommuterRepository
-package model;
+package Repository;
 
+import model.Commuter; // Импортируем модель
+import model.DBConnection; // Импортируем подключение
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
